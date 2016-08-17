@@ -59,4 +59,66 @@ router.post('/write', function(req, res, next) {
 	});
 });
 
+router.get('/read/:idx', function(req, res, next) {
+	var idx = req.params.idx;
+
+	pool.getConnection(function(err, connection) {
+		var sqlForReadBoard = "SELECT idx, creator_id, title, content, date_format(modidate,'%Y-%m-%d %H:%i:%s') modidate, hit from board WHERE idx = ?";
+		connection.query(sqlForReadBoard, idx, function(err, row) {
+			if(err) {
+				console.error('err : ' + err);
+			}
+
+			console.log('row : ' + row);
+			
+			res.render('read', {title: '글 조회', row: row[0]});
+			connection.release();
+		});
+	});
+});
+
+router.get('/update', function(req, res, next) {
+	var idx = req.query.idx
+
+	pool.getConnection(function(err, connection) {
+		var sqlForSelectOneBoard = "SELECT idx, creator_id, title, content, date_format(modidate,'%Y-%m-%d %H:%i:%s') modidate, hit from board WHERE idx = ?";
+		connection.query(sqlForSelectOneBoard, idx, function(err, row) {
+			if(err) {
+				console.error('err : ' + err);
+			}
+
+			console.log('row : ' + row);
+			
+			res.render('update', {title: '글 수정', row: row[0]});
+			connection.release();
+		});
+	});
+});
+
+router.post('/update', function(req, res, next) {
+	var idx = req.body.idx;
+	var creator_id = req.body.creator_id;
+	var title = req.body.title;
+	var content = req.body.content;
+	var passwd = req.body.passwd;
+	var datas = [creator_id, title, content, idx, passwd];
+
+	pool.getConnection(function(err, connection) {
+		var sqlForUpdateBoard = "UPDATE board SET creator_id = ?, title = ?, content = ?, regdate = now() WHERE idx = ? and passwd = ?";
+		connection.query(sqlForUpdateBoard, datas, function(err, result) {
+			console.log(result);
+
+			if(err) {
+				console.error('err : ' + err);
+			}
+
+			if(result.affectedRows == 0) {
+				res.send("<script>alert('패스워드가 일치하지 않거나 잘못된 요청입니다.');history.back();</script>");
+			} else {
+				res.redirect('/board/read/' + idx);
+			}
+		});
+	});
+});
+
 module.exports = router;
