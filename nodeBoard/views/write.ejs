@@ -2,37 +2,36 @@
 <html>
 <head>
 <script src="/javascripts/jquery-1.11.2.min.js"></script>
-<link rel='stylesheet' href='/stylesheets/style.css'/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 </head>
 <body>
+<div class="container">
 <h1><%= title %></h1>
+<br>
 
-<form action="/board/write" method="post" onsubmit="return onWriteSubmit()">
-    <table border="1">
-        <tr>
-            <td>작성자</td>
-            <td><input type="text" name="creator_id" id="creator_id"/></td>
-        </tr>
-        <tr>
-            <td>제목</td>
-            <td><input type="text" name="title" id="title"/></td>
-        </tr>
-        <tr>
-            <td>내용</td>
-            <td><textarea name="content" id="content" cols="30" rows="10"></textarea></td>
-        </tr>
-        <tr>
-            <td>패스워드</td>
-            <td><input type="password" name="passwd" id="passwd"/></td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <button type="submit">글쓰기</button>
-		<button onclick="backList(); return false;">목록</button>
-            </td>
-        </tr>
-    </table>
+<form id="writeForm" action="/board/write" method="post">
+	<div class="form-group">
+	    <label for="exampleInputText">작성자</label>
+	    <input type="email" class="form-control" id="creator_id" name="creator_id" placeholder="아이디를 입력하세요.">
+	</div>
+	<div class="form-group">
+	    <label for="exampleInputText">제목</label>
+	    <input type="email" class="form-control" id="title" name="title" placeholder="제목을 입력하세요.">
+	</div>
+	<div class="form-group">
+	    <label for="exampleInputText">내용</label>
+        <textarea class="form-control" id="content" name="content" rows="3" placeholder="내용을 입력하세요."></textarea>
+       	</div>
+	<div class="form-group">
+	    <label for="exampleInputpassword">비밀번호</label>
+	    <input type="password" class="form-control" id="passwd" name="passwd" placeholder="비밀번호를 입력하세요.">
+	</div>
+        <div class="form-group">
+		<button type="button" class="btn btn-primary" onclick="return onWriteSubmit()">글쓰기</button>
+		<button type="button" class="btn btn-info" onclick="location.href='/board'">목록</button>
+        </div>
 </form>
+</div>
 
 <script>
 function onWriteSubmit() {
@@ -69,11 +68,8 @@ function onWriteSubmit() {
 		alert(message);
 		return false;
 	}
-}
-
-function backList(){
-	location.href = "/board/";
-	return false;
+	
+	$("#writeForm").submit();
 }
 
 </script>

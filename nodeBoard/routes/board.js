@@ -26,7 +26,7 @@ router.get('/list/:page', function(req, res, next) {
 
 			console.log('rows : ' + JSON.stringify(rows));
 
-			res.render('list', {title: '게시판 전체 글 조회', rows: rows});
+			res.render('list', {title: '리스트', rows: rows});
 			connection.release();
 		});
 	});
@@ -78,7 +78,7 @@ router.get('/read/:idx', function(req, res, next) {
 });
 
 router.get('/update', function(req, res, next) {
-	var idx = req.query.idx
+	var idx = req.query.idx;
 
 	pool.getConnection(function(err, connection) {
 		var sqlForSelectOneBoard = "SELECT idx, creator_id, title, content, date_format(modidate,'%Y-%m-%d %H:%i:%s') modidate, hit from board WHERE idx = ?";
@@ -102,7 +102,7 @@ router.post('/update', function(req, res, next) {
 	var content = req.body.content;
 	var passwd = req.body.passwd;
 	var datas = [creator_id, title, content, idx, passwd];
-
+	console.log(datas);
 	pool.getConnection(function(err, connection) {
 		var sqlForUpdateBoard = "UPDATE board SET creator_id = ?, title = ?, content = ?, regdate = now() WHERE idx = ? and passwd = ?";
 		connection.query(sqlForUpdateBoard, datas, function(err, result) {
@@ -117,6 +117,28 @@ router.post('/update', function(req, res, next) {
 			} else {
 				res.redirect('/board/read/' + idx);
 			}
+			connection.release();
+		});
+	});
+});
+
+router.get('/delete', function(req, res, next) {
+	var idx = req.query.idx;
+
+	pool.getConnection(function(err, connection) {
+		var sqlForDeleteBoard = "DELETE FROM board WHERE idx = ?";
+		connection.query(sqlForDeleteBoard, idx, function(err, result) {
+			if(err) {
+				console.error('err : ' + err);
+			}
+
+			if(result.affectedRows == 0) {
+				res.send("<script>alert('잘못된 요청입니다.');history.back();</script>");
+			} else {
+				res.redirect('/board');
+			}
+			
+			connection.release();
 		});
 	});
 });

@@ -2,13 +2,15 @@
 <html>
 <head>
 <script src="/javascripts/jquery-1.11.2.min.js"></script>
-<link rel='stylesheet' href='/stylesheets/style.css'/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 </head>
 <body>
+<div class="container">
 <h1><%= title %></h1>
+<br>
 
-<form action="/board/update" method="get">
-    <table border="1">
+<form id="updateForm" action="/board/update" method="get">
+    <table class="table table">
         <input type="hidden" name="idx" value="<%=row.idx%>"/>
         <tr>
             <td>작성자</td>
@@ -30,14 +32,19 @@
             <td>조회수</td>
             <td><%=row.hit%></td>
         </tr>
-        <tr>
-            <td colspan="2">
-                <button type="submit">글 수정</button>
-                <a href="/board">리스트로 돌아가기</a>
-            </td>
-        </tr>
+	<tr></tr>
     </table>
+    		<button type="button" class="btn btn-primary" onclick="fnUpdate()">글 수정</button>		
+		<button type="button" class="btn btn-info" onclick="location.href='/board'">리스트</button>        
 </form>
+</div>
 
 </body>
+<script>
+function fnUpdate() {
+	$("#updateForm").submit();
+}
+
+</script>
+
 </html>
