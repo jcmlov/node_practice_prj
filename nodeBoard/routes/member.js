@@ -14,6 +14,7 @@ var pool = mysql.createPool({
 router.post('/login/', function(req, res, next) {
 	var sess;
 	sess = req.session;
+	console.log(sess);
 });
 
 router.post('/account', function(req, res, next) {
@@ -33,7 +34,7 @@ router.post('/account', function(req, res, next) {
 
 			console.log('rows : ' + JSON.stringify(rows));
 
-			res.redirect('/board');
+			res.redirect('/');
 			connection.release();
 		});
 	});
